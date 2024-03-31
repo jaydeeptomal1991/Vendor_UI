@@ -1,3 +1,4 @@
 export class DialogMessage {
-    value: string = ''
+    value: string = '';
+    vendorId!: number;
 }

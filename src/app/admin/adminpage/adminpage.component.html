@@ -171,19 +171,22 @@
                                 <td mat-cell *matCellDef="let element">{{element.createdDate |date }}</td>
                             </ng-container>
                             <ng-container matColumnDef="pendingRequest">
-                                <th mat-header-cell *matHeaderCellDef> Pending Request </th>
+                                <th mat-header-cell *matHeaderCellDef> Action </th>
 
                                 <td mat-cell *matCellDef="let element">
-                                    <span *ngIf="element.pendingRequest===true">
-                                        <!-- {{element.pendingRequest}} -->
-                                        <button mat-flat-button color="primary"
-                                            (click)="acceptDialog()">Pending</button>
-                                    </span>
-                                    <span *ngIf="element.pendingRequest===false">
-                                        <!-- {{element.pendingRequest}} -->
-                                        <button mat-flat-button color="warn" (click)="rejectDialog()">Reject</button>
-                                    </span>
+                                    <button mat-mini-fab matTooltip="Vendor request is pending" color="warn"
+                                        *ngIf="element.pendingRequest===true" (click)="acceptDialog(element.vendorId)"
+                                        aria-label="Example mini fab with a heart icon">
+                                        <mat-icon>new_releases</mat-icon>
+                                    </button>
+                                    <button mat-mini-fab matTooltip="Vendor added, do you want to reject ?"
+                                        color="primary" *ngIf="element.pendingRequest===false"
+                                        (click)="rejectDialog(element.vendorId)"
+                                        aria-label="Example mini fab with a heart icon">
+                                        <mat-icon>check</mat-icon>
+                                    </button>
                                 </td>
+
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef=" displayedColumns"></tr>

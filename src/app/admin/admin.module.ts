@@ -8,6 +8,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { DialogComponent } from './dialog/dialog.component';
     ReactiveFormsModule,
     MatPaginatorModule,
     MatTableModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ]
 })
 export class AdminModule { }

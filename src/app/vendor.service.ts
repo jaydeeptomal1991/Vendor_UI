@@ -18,4 +18,8 @@ export class VendorService {
       headers: header
     });
   }
+
+  updateVendor(data: any) {
+    console.log("Data is: ", data);
+  }
 }

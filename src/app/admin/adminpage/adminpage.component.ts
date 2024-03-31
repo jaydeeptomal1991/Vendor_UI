@@ -15,6 +15,7 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { AdminService } from 'src/app/admin.service';
 
 export interface Vendor {
   vendorId: number;
@@ -54,7 +55,7 @@ export class AdminpageComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private userService: UserServiceService, private toaster: ToastrService, private vendorService: VendorService, public dialog: MatDialog) {
+  constructor(private userService: UserServiceService, private toaster: ToastrService, private vendorService: VendorService, public dialog: MatDialog, private adminService: AdminService) {
     this.createVendor = new FormGroup({
       vendorName: new FormControl('', Validators.required),
       vendorLicenseOwner: new FormControl('', Validators.required),
@@ -72,22 +73,24 @@ export class AdminpageComponent {
 
 
   // Dialog
-  acceptDialog(): void {
+  acceptDialog(vendorId: number): void {
     this.dialog.open(DialogComponent, {
       width: '400px',
       height: '170px',
       data: {
-        value: "ACCEPT"
+        value: "ACCEPT",
+        vendorId
       }
     });
   }
 
-  rejectDialog(): void {
+  rejectDialog(vendorId: number): void {
     this.dialog.open(DialogComponent, {
       width: '400px',
       height: '170px',
       data: {
-        value: "REJECT"
+        value: "REJECT",
+        vendorId
       }
     });
   }
@@ -98,6 +101,7 @@ export class AdminpageComponent {
       resp => {
         if (resp.statusCode === 200) {
           this.toaster.success(resp.message)
+          this.createVendor.reset();
         }
       }, err => {
         if (err.status === 401) {
@@ -136,9 +140,15 @@ export class AdminpageComponent {
     )
   }
 
+
+
   showUserList() {
 
   }
 
+  updateVendor() {
+    let vendorId = this.adminService.getVendorId();
+    console.log("Pending update Vendor Id: ", vendorId);
+  }
 
 }

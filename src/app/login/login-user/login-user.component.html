@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="https://gdm-catalog-fmapi-prod.imgix.net/ProductLogo/8132d1f7-3b82-4081-acea-081c4ae82d03.png"
+                width="85%">
+        </div>
+        <div class="col-md-6">
+            <div id="box">
+                <div class="login">
+                    <mat-card>
+                        <form [formGroup]="loginUser">
+                            <h2>LOG IN</h2>
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Email Address</mat-label>
+                                <input matInput placeholder="abc@xyz.com" formControlName="username" type="email">
+
+                            </mat-form-field>
+                            <span *ngIf="username && username.invalid && username.touched">
+                                <mat-error>Please enter a valid email address</mat-error>
+                            </span>
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Enter your password</mat-label>
+                                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                                <button mat-icon-button matSuffix (click)=" hide=!hide"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+
+                            <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
+                                [disabled]="loginUser.invalid">
+                                <i class="material-icons">login</i>&nbsp;
+                                Log In</button>
+                            <button mat-raised-button color="warn">
+                                <i class="material-icons">lock_reset</i> &nbsp;
+                                Forgot Password</button>
+                            <a routerLink="register/createUser">Register Yourself</a>
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

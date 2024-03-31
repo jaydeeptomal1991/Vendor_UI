@@ -1,0 +1,209 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <img src="https://gdm-catalog-fmapi-prod.imgix.net/ProductLogo/8132d1f7-3b82-4081-acea-081c4ae82d03.png"
+                width="80%" class="logo">
+        </div>
+        <div class="col-md-10">
+            <span>Welcome: <strong>ADMIN</strong></span>
+            <br>
+            <span>Log time: <strong>{{date|date:'medium'}}</strong></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <mat-tab-group animationDuration="1000ms" [color]="color" (selectedTabChange)="onChange($event)">
+                <mat-tab label="Add Vendor">
+                    <br>
+                    <form [formGroup]="createVendor" (ngSubmit)="submit()">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Vendor Name</mat-label>
+                            <input matInput placeholder="abc" formControlName="vendorName" type="text">
+
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Licensed By</mat-label>
+                            <input matInput placeholder="abc" formControlName="vendorLicenseOwner" type="text">
+
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Registration Number</mat-label>
+                            <input matInput placeholder="abc" formControlName="registrationNumber" type="number">
+
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width">
+                            <mat-label>GST Number</mat-label>
+                            <input matInput placeholder="abc" formControlName="gstNumber" type="text" maxlength="15">
+
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                            <mat-label> Phone Number</mat-label>
+                            <input matInput placeholder="9876543210" formControlName="phoneNumber" maxlength="10"
+                                type="text">
+
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                            <mat-label> Email</mat-label>
+                            <input matInput placeholder="abc@xyz.com" formControlName="vendorUsername" type="email"
+                                id="emailCaseChange">
+                        </mat-form-field>
+
+
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Address</mat-label>
+                            <textarea matInput placeholder="Ex. 2nd Link Road"
+                                formControlName="vendorAddress"></textarea>
+                        </mat-form-field>
+
+                        <table class="example-full-width" cellspacing="0">
+                            <tr>
+
+                                <td>
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>State</mat-label>
+                                        <mat-select formControlName="state">
+                                            <mat-option value="Andhra Pradesh">Andhra Pradesh</mat-option>
+                                            <mat-option value="Arunachal Pradesh">Arunachal Pradesh</mat-option>
+                                            <mat-option value="Assam">Assam</mat-option>
+                                            <mat-option value="Bihar">Bihar</mat-option>
+                                            <mat-option value="Chhattisgarh">Chhattisgarh</mat-option>
+                                            <mat-option value="Goa">Goa</mat-option>
+                                            <mat-option value="Gujarat">Gujarat</mat-option>
+                                            <mat-option value="Haryana">Haryana</mat-option>
+                                            <mat-option value="Himachal Pradesh">Himachal Pradesh</mat-option>
+                                            <mat-option value="Jharkhand">Jharkhand</mat-option>
+                                            <mat-option value="Karnataka">Karnataka</mat-option>
+                                            <mat-option value="Kerala">Kerala</mat-option>
+                                            <mat-option value="Madhya Pradesh">Madhya Pradesh</mat-option>
+                                            <mat-option value="Maharashtra">Maharashtra</mat-option>
+                                            <mat-option value="Manipur">Manipur</mat-option>
+                                            <mat-option value="Meghalaya">Meghalaya</mat-option>
+                                            <mat-option value="Mizoram">Mizoram</mat-option>
+                                            <mat-option value="Nagaland">Nagaland</mat-option>
+                                            <mat-option value="Odisha">Odisha</mat-option>
+                                            <mat-option value="Punjab">Punjab</mat-option>
+                                            <mat-option value="Rajasthan">Rajasthan</mat-option>
+                                            <mat-option value="Sikkim">Sikkim</mat-option>
+                                            <mat-option value="Tamil Nadu">Tamil Nadu</mat-option>
+                                            <mat-option value="Telangana">Telangana</mat-option>
+                                            <mat-option value="Tripura">Tripura</mat-option>
+                                            <mat-option value="Uttar Pradesh">Uttar Pradesh</mat-option>
+                                            <mat-option value="Uttarakhand">Uttarakhand</mat-option>
+                                            <mat-option value="West Bengal">West Bengal</mat-option>
+                                            <mat-option value="Andaman and Nicobar Island">Andaman and Nicobar
+                                                Island</mat-option>
+                                            <mat-option value="Chandigarh">Chandigarh</mat-option>
+                                            <mat-option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and
+                                                Nagar Haveli and Daman and Diu</mat-option>
+                                            <mat-option value="Delhi">Delhi</mat-option>
+                                            <mat-option value="Ladakh">Ladakh</mat-option>
+                                            <mat-option value="Lakshadweep">Lakshadweep</mat-option>
+                                            <mat-option value="Jammu and Kashmir">Jammu and Kashmir</mat-option>
+                                            <mat-option value="Puducherry">Puducherry</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                </td>
+                                <td><mat-form-field class="example-full-width">
+                                        <mat-label>City</mat-label>
+                                        <input matInput placeholder="Ex. Silchar" formControlName="city">
+                                    </mat-form-field></td>
+                                <td><mat-form-field class="example-full-width">
+                                        <mat-label>Postal Code</mat-label>
+                                        <input matInput #postalCode maxlength="6" placeholder="Ex. 788006"
+                                            formControlName="postalCode">
+                                    </mat-form-field></td>
+                            </tr>
+                        </table>
+                        <button class="button-18" role="button">SAVE</button>
+                    </form>
+                </mat-tab>
+                <mat-tab label="View Vendor">
+
+                    <!-- Table -->
+
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSource">
+
+                            <ng-container matColumnDef="vendorName">
+                                <th mat-header-cell *matHeaderCellDef> Vendor Name </th>
+                                <td mat-cell *matCellDef="let element">{{element.vendorName}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="vendorLicenseOwner">
+                                <th mat-header-cell *matHeaderCellDef> Vendor License Owner </th>
+                                <td mat-cell *matCellDef="let element">{{element.vendorLicenseOwner}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="registrationNumber">
+                                <th mat-header-cell *matHeaderCellDef> Registration Number </th>
+                                <td mat-cell *matCellDef="let element">{{element.registrationNumber}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="gstNumber">
+                                <th mat-header-cell *matHeaderCellDef> GST Number </th>
+                                <td mat-cell *matCellDef="let element">{{element.gstNumber}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="vendorAddress">
+                                <th mat-header-cell *matHeaderCellDef> Vendor Address </th>
+                                <td mat-cell *matCellDef="let element">{{element.vendorAddress}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="state">
+                                <th mat-header-cell *matHeaderCellDef> State </th>
+                                <td mat-cell *matCellDef="let element">{{element.state}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="city">
+                                <th mat-header-cell *matHeaderCellDef>City </th>
+                                <td mat-cell *matCellDef="let element">{{element.city}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="postalCode">
+                                <th mat-header-cell *matHeaderCellDef> Postal Code </th>
+                                <td mat-cell *matCellDef="let element">{{element.postalCode}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="phoneNumber">
+                                <th mat-header-cell *matHeaderCellDef> Phone Number </th>
+                                <td mat-cell *matCellDef="let element">{{element.phoneNumber}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="createdDate">
+                                <th mat-header-cell *matHeaderCellDef> Created Date </th>
+                                <td mat-cell *matCellDef="let element">{{element.createdDate |date }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="pendingRequest">
+                                <th mat-header-cell *matHeaderCellDef> Pending Request </th>
+
+                                <td mat-cell *matCellDef="let element">
+                                    <span *ngIf="element.pendingRequest===true">
+                                        <!-- {{element.pendingRequest}} -->
+                                        <button mat-flat-button color="primary"
+                                            (click)="acceptDialog()">Pending</button>
+                                    </span>
+                                    <span *ngIf="element.pendingRequest===false">
+                                        <!-- {{element.pendingRequest}} -->
+                                        <button mat-flat-button color="warn" (click)="rejectDialog()">Reject</button>
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef=" displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                            aria-label="Select page of periodic elements">
+                        </mat-paginator>
+                    </div>
+                </mat-tab>
+                <mat-tab label="View User">User List</mat-tab>
+            </mat-tab-group>
+
+        </div>
+        <div class="col-md-2">
+            <button mat-raised-button color="warn" class="signout" routerLink="" (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                LOGOUT</button>
+        </div>
+
+    </div>
+
+</div>

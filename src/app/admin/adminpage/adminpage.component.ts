@@ -16,6 +16,7 @@ import {
 } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { AdminService } from 'src/app/admin.service';
+import { ThemePalette } from '@angular/material/core';
 
 export interface Vendor {
   vendorId: number;
@@ -30,6 +31,7 @@ export interface Vendor {
   phoneNumber: string;
   vendorUsername: string;
   createdDate: Date;
+  activeDays: number;
   updatedDate: Date;
   role: string;
   pendingRequest: boolean;
@@ -44,15 +46,15 @@ export interface Vendor {
 })
 
 export class AdminpageComponent {
-
-  color: string = 'white';
-  backgroundColor: string = 'pink';
+  selectedIndex: number = 1;
   date: Date | undefined = new Date;
   createVendor: FormGroup;
-  displayedColumns: string[] = ['vendorName', 'vendorLicenseOwner', 'registrationNumber', 'gstNumber', 'vendorAddress', 'state', 'city', 'postalCode', 'phoneNumber', 'createdDate', 'pendingRequest'];
+  displayedColumns: string[] = ['vendorName', 'vendorLicenseOwner', 'registrationNumber', 'gstNumber', 'vendorAddress', 'state', 'city', 'postalCode', 'phoneNumber', 'createdDate', 'activeDays', 'pendingRequest'];
   post: any;
   dataSource = new MatTableDataSource<Vendor>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  setDialog!: string;
+  vendorId!: number;
 
 
   constructor(private userService: UserServiceService, private toaster: ToastrService, private vendorService: VendorService, public dialog: MatDialog, private adminService: AdminService) {
@@ -69,10 +71,11 @@ export class AdminpageComponent {
       vendorUsername: new FormControl('', Validators.required),
       role: new FormControl('VENDOR', Validators.required)
     });
+    this.showVendorList();
   }
 
 
-  // Dialog
+  // Dialog      
   acceptDialog(vendorId: number): void {
     this.dialog.open(DialogComponent, {
       width: '400px',
@@ -81,7 +84,15 @@ export class AdminpageComponent {
         value: "ACCEPT",
         vendorId
       }
-    });
+    })
+      .afterClosed()
+      .subscribe(() => {
+        let x = this.adminService.geAccepttVendorId();
+        let y = x.split(' ');
+        if (y[1] === 'Accept') {
+          this.vendorService.updateVendor({ vendorId, pendingRequest: true });
+        }
+      })
   }
 
   rejectDialog(vendorId: number): void {
@@ -91,8 +102,11 @@ export class AdminpageComponent {
       data: {
         value: "REJECT",
         vendorId
-      }
-    });
+      },
+    })
+      .afterClosed()
+      .subscribe(() => console.log("Dialog box closed for vendor Id:: ", this.adminService.geAccepttVendorId()))
+
   }
 
 
@@ -130,6 +144,17 @@ export class AdminpageComponent {
     this.vendorService.showVendorList().subscribe(
       resp => {
         if (resp.statusCode === 200) {
+          let now = new Date();
+          for (let i = 0; i < resp.data.length; i++) {
+            let { createdDate } = resp.data[i];
+            let now = new Date();
+            const oneDay = 24 * 60 * 60 * 1000;
+            const diffInTime = now.getTime() - new Date(createdDate).getTime();
+            const x = Math.round(diffInTime / oneDay);
+            let { activeDays } = resp.data[i];
+            activeDays = x;
+            console.log(activeDays);
+          }
           this.post = resp.data;
           this.dataSource = new MatTableDataSource(this.post);
           this.dataSource.paginator = this.paginator;
@@ -147,8 +172,7 @@ export class AdminpageComponent {
   }
 
   updateVendor() {
-    let vendorId = this.adminService.getVendorId();
-    console.log("Pending update Vendor Id: ", vendorId);
+
   }
 
 }

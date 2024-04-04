@@ -19,8 +19,10 @@ export class DialogComponent {
     this.vendorId = data.vendorId;
   }
 
-  action(vendorId: number) {
-    console.log("Vendor Id is: ", vendorId);
-    this.adminService.setVendorId(vendorId);
+  accept(vendorId: number, diag: string) {
+    this.adminService.setAcceptVendorId(vendorId, diag);
+  }
+  reject(vendorId: number, diag: string) {
+    this.adminService.setRejectVendorId(vendorId, diag);
   }
 }

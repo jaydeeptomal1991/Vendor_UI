@@ -11,6 +11,7 @@ export interface Vendor {
     phoneNumber: string;
     vendorUsername: string;
     createdDate: Date;
+    activeDays: number;
     updatedDate: Date;
     role: string;
     pendingRequest: boolean;

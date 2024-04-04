@@ -104,3 +104,6 @@ h3 {
 table {
   width: 100%;
 }
+.tabButton {
+  display: inline-block;
+}

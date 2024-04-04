@@ -6,16 +6,26 @@ import { Injectable } from '@angular/core';
 export class AdminService {
 
   vendor_id!: number;
+  diag!: string;
 
   constructor() { }
 
-  setVendorId(vendorId: number) {
+  setAcceptVendorId(vendorId: number, diag: string) {
     this.vendor_id = vendorId;
+    this.diag = diag;
   }
 
-  getVendorId() {
-    return this.vendor_id;
+  geAccepttVendorId() {
+    return this.vendor_id + " " + this.diag;
   }
 
+  setRejectVendorId(vendorId: number, diag: string) {
+    this.vendor_id = vendorId;
+    this.diag = diag;
+  }
+
+  getRejectVendorId() {
+    return this.vendor_id + " " + this.diag;
+  }
 
 }

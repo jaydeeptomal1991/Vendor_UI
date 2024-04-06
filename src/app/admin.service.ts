@@ -19,13 +19,8 @@ export class AdminService {
     return this.vendor_id + " " + this.diag;
   }
 
-  setRejectVendorId(vendorId: number, diag: string) {
-    this.vendor_id = vendorId;
-    this.diag = diag;
+  updateVendorId(vendorId: number, diag: string) {
+    this.vendor_id = 0;
+    this.diag = '';
   }
-
-  getRejectVendorId() {
-    return this.vendor_id + " " + this.diag;
-  }
-
 }

@@ -16,7 +16,17 @@
         <div class="col-md-8">
             <mat-tab-group animationDuration="1000ms" (selectedTabChange)="onChange($event)"
                 [(selectedIndex)]=selectedIndex>
-                <mat-tab label="Add Vendor">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon class="example-tab-icon">pie_chart</mat-icon>
+                        Chart
+                    </ng-template>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon class="example-tab-icon">add_box</mat-icon>
+                        Add Vendor
+                    </ng-template>
                     <br>
                     <form [formGroup]="createVendor" (ngSubmit)="submit()">
                         <mat-form-field class="example-full-width">
@@ -37,11 +47,13 @@
 
                         <mat-form-field class="example-full-width">
                             <mat-label>GST Number</mat-label>
-                            <input matInput placeholder="abc" formControlName="gstNumber" type="text" maxlength="15">
+                            <input matInput placeholder="abc" formControlName="gstNumber" type="text" maxlength="15"
+                                id=" emailCaseChangeUpper">
 
                         </mat-form-field>
                         <mat-form-field class="example-full-width">
                             <mat-label> Phone Number</mat-label>
+                            <span matTextPrefix>+91 &nbsp;</span>
                             <input matInput placeholder="9876543210" formControlName="phoneNumber" maxlength="10"
                                 type="text">
 
@@ -122,7 +134,11 @@
                         <button class="button-18" role="button">SAVE</button>
                     </form>
                 </mat-tab>
-                <mat-tab label="View Vendor">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon class="example-tab-icon">view_list</mat-icon>
+                        View Vendor
+                    </ng-template>
 
                     <!-- Table -->
 
@@ -173,7 +189,7 @@
                             </ng-container>
                             <ng-container matColumnDef="activeDays">
                                 <th mat-header-cell *matHeaderCellDef> Active Days </th>
-                                <td mat-cell *matCellDef="let element">{{element.activeDays |date }}</td>
+                                <td mat-cell *matCellDef="let element">{{element.activeDays }}</td>
                             </ng-container>
                             <ng-container matColumnDef="pendingRequest">
                                 <th mat-header-cell *matHeaderCellDef> Action </th>
@@ -183,13 +199,13 @@
                                         color="warn" *ngIf="element.pendingRequest===true"
                                         (click)="acceptDialog(element.vendorId)"
                                         aria-label="Example mini fab with a heart icon">
-                                        <mat-icon>new_releases</mat-icon>
+                                        <mat-icon>warning</mat-icon>
                                     </button>
                                     <button class="tabButton" mat-mini-fab
                                         matTooltip="Vendor added, do you want to reject ?" color="primary"
                                         *ngIf="element.pendingRequest===false" (click)="rejectDialog(element.vendorId)"
                                         aria-label="Example mini fab with a heart icon">
-                                        <mat-icon>check</mat-icon>
+                                        <mat-icon>verified</mat-icon>
                                     </button>
                                 </td>
                             </ng-container>
@@ -202,7 +218,71 @@
                         </mat-paginator>
                     </div>
                 </mat-tab>
-                <mat-tab label="View User">User List</mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon class="example-tab-icon">group</mat-icon>
+                        View Users
+                    </ng-template>
+
+                    <!-- Users List -->
+
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSourceUser">
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="username">
+                                <th mat-header-cell *matHeaderCellDef> Email </th>
+                                <td mat-cell *matCellDef="let element"> {{element.username}}</td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="phoneNumber">
+                                <th mat-header-cell *matHeaderCellDef> Phone Number </th>
+                                <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
+                            </ng-container>
+
+                            <!-- Symbol Column -->
+                            <ng-container matColumnDef="createdDate">
+                                <th mat-header-cell *matHeaderCellDef> Created Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.createdDate|date}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="pendingRequest">
+                                <th mat-header-cell *matHeaderCellDef> Action </th>
+                                <!-- <td mat-cell *matCellDef="let element"> {{element.pendingRequest}} </td> -->
+                                <td mat-cell *matCellDef="let element">
+                                    <button class="tabButton" mat-mini-fab matTooltip="Vendor request is pending"
+                                        color="warn" *ngIf="element.pendingRequest===true"
+                                        (click)="acceptDialog(element.vendorId)"
+                                        aria-label="Example mini fab with a heart icon">
+                                        <mat-icon>warning</mat-icon>
+                                    </button>
+                                    <button class="tabButton" mat-mini-fab
+                                        matTooltip="Vendor added, do you want to reject ?" color="primary"
+                                        *ngIf="element.pendingRequest===false" (click)="rejectDialog(element.vendorId)"
+                                        aria-label="Example mini fab with a heart icon">
+                                        <mat-icon>verified</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsUsers"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsUsers;"></tr>
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                            aria-label="Select page of periodic elements">
+                        </mat-paginator>
+                    </div>
+
+
+                </mat-tab>
             </mat-tab-group>
 
         </div>

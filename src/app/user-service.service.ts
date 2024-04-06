@@ -8,6 +8,7 @@ import { CreateUser } from './model/CreateUser';
 import { CreateRegisterResponse } from './model/CreateRegisterResponse';
 import { SuccessResponse } from './model/SuccessResponse';
 import { vendorListData } from './model/vendorListData';
+import { UserListData } from './model/userListData';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,15 @@ export class UserServiceService {
 
   registerVendor(vendor: createVendor): Observable<SuccessResponse> {
     return this.http.post<SuccessResponse>('http://localhost:8082/registerVendor', vendor);
+  }
+
+  showUsersListAdmin() {
+    let token = sessionStorage.getItem('token');
+    let header = new HttpHeaders().set("Authorization", 'Bearer ' + token);
+    return this.http.get<UserListData>('http://localhost:8082/showUserList', {
+      headers: header
+    })
+
   }
 
 }

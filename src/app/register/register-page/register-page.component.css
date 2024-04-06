@@ -29,8 +29,15 @@ button {
 #userEmailLowerCase {
   text-transform: lowercase;
 }
+#emailCaseChangeUpper {
+  text-transform: uppercase;
+}
 
-h2 {
+#emailCaseChange {
+  text-transform: lowercase;
+}
+
+emailCaseChange h2 {
   text-align: center;
   color: rgb(230, 15, 15);
   font-size: x-large;

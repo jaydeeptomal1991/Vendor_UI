@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
 }
+
 #welcome {
   position: relative;
   right: 40px;
@@ -47,7 +48,9 @@ h3 {
 #emailCaseChange {
   text-transform: lowercase;
 }
-
+#emailCaseChangeUpper {
+  text-transform: uppercase;
+}
 /* Button */
 
 /* CSS */

@@ -17,6 +17,8 @@ import {
 import { DialogComponent } from '../dialog/dialog.component';
 import { AdminService } from 'src/app/admin.service';
 import { ThemePalette } from '@angular/material/core';
+import { SharedService } from 'src/app/shared.service';
+import { UsersData } from 'src/app/model/userData';
 
 export interface Vendor {
   vendorId: number;
@@ -55,9 +57,11 @@ export class AdminpageComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   setDialog!: string;
   vendorId!: number;
+  displayedColumnsUsers: string[] = ['name', 'username', 'phoneNumber', 'createdDate', 'pendingRequest'];
+  dataSourceUser = new MatTableDataSource<UsersData>;
 
 
-  constructor(private userService: UserServiceService, private toaster: ToastrService, private vendorService: VendorService, public dialog: MatDialog, private adminService: AdminService) {
+  constructor(private userService: UserServiceService, private toaster: ToastrService, private vendorService: VendorService, public dialog: MatDialog, private adminService: AdminService, private sharedService: SharedService) {
     this.createVendor = new FormGroup({
       vendorName: new FormControl('', Validators.required),
       vendorLicenseOwner: new FormControl('', Validators.required),
@@ -71,6 +75,15 @@ export class AdminpageComponent {
       vendorUsername: new FormControl('', Validators.required),
       role: new FormControl('VENDOR', Validators.required)
     });
+    const obj = this.createVendor.get('gstNumber');
+    obj?.valueChanges.subscribe(() => {
+      obj.patchValue(obj.value.toUpperCase(), { emitEvent: false })
+    })
+
+    const obj1 = this.createVendor.get('vendorUsername');
+    obj1?.valueChanges.subscribe(() => {
+      obj1.patchValue(obj1.value.toLowerCase(), { emitEvent: false })
+    })
     this.showVendorList();
   }
 
@@ -90,8 +103,35 @@ export class AdminpageComponent {
         let x = this.adminService.geAccepttVendorId();
         let y = x.split(' ');
         if (y[1] === 'Accept') {
-          this.vendorService.updateVendor({ vendorId, pendingRequest: true });
+          this.vendorService.updateVendor({ vendorId, pendingRequest: false })
+            .subscribe(
+              resp => {
+                if (resp.statusCode === 200) {
+                  let now = new Date();
+                  for (let i = 0; i < resp.data.length; i++) {
+                    let { createdDate } = resp.data[i];
+                    let now = new Date();
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    const diffInTime = now.getTime() - new Date(createdDate).getTime();
+                    const x = Math.round(diffInTime / oneDay);
+                    const Vendor = resp.data[i];
+                    Vendor.activeDays = x;
+                    resp.data[i] = Vendor;
+                    if (resp.data[i].activeDays === 30) {
+                      this.sendNotification(resp.data[i]);
+                    }
+                  }
+                  this.post = resp.data;
+                  this.dataSource = new MatTableDataSource(this.post);
+                  this.dataSource.paginator = this.paginator;
+                }
+              }, err => {
+                this.toaster.error("ERROR");
+              }
+            )
         }
+        this.adminService.setAcceptVendorId(0, '');
+
       })
   }
 
@@ -105,7 +145,39 @@ export class AdminpageComponent {
       },
     })
       .afterClosed()
-      .subscribe(() => console.log("Dialog box closed for vendor Id:: ", this.adminService.geAccepttVendorId()))
+      .subscribe(() => {
+        let x = this.adminService.geAccepttVendorId();
+        let y = x.split(' ');
+        if (y[1] === 'Accept') {
+          this.vendorService.updateVendor({ vendorId, pendingRequest: true })
+            .subscribe(
+              resp => {
+                if (resp.statusCode === 200) {
+                  let now = new Date();
+                  for (let i = 0; i < resp.data.length; i++) {
+                    let { createdDate } = resp.data[i];
+                    let now = new Date();
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    const diffInTime = now.getTime() - new Date(createdDate).getTime();
+                    const x = Math.round(diffInTime / oneDay);
+                    const Vendor = resp.data[i];
+                    Vendor.activeDays = x;
+                    resp.data[i] = Vendor;
+                    if (resp.data[i].activeDays === 30) {
+                      this.sendNotification(resp.data[i]);
+                    }
+                  }
+                  this.post = resp.data;
+                  this.dataSource = new MatTableDataSource(this.post);
+                  this.dataSource.paginator = this.paginator;
+                }
+              }, err => {
+                this.toaster.error("ERROR");
+              }
+            )
+        }
+        this.adminService.setAcceptVendorId(0, '');
+      })
 
   }
 
@@ -133,10 +205,10 @@ export class AdminpageComponent {
 
   onChange(tab: MatTabChangeEvent) {
     let { index } = tab;
-    if (index === 1) {
+    if (index === 2) {
       this.showVendorList();
     }
-    else if (index === 2) {
+    else if (index === 3) {
       this.showUserList();
     }
   }
@@ -151,9 +223,12 @@ export class AdminpageComponent {
             const oneDay = 24 * 60 * 60 * 1000;
             const diffInTime = now.getTime() - new Date(createdDate).getTime();
             const x = Math.round(diffInTime / oneDay);
-            let { activeDays } = resp.data[i];
-            activeDays = x;
-            console.log(activeDays);
+            const Vendor = resp.data[i];
+            Vendor.activeDays = x;
+            resp.data[i] = Vendor;
+            if (resp.data[i].activeDays === 30) {
+              this.sendNotification(resp.data[i]);
+            }
           }
           this.post = resp.data;
           this.dataSource = new MatTableDataSource(this.post);
@@ -165,10 +240,23 @@ export class AdminpageComponent {
     )
   }
 
+  sendNotification(data: Vendor) {
+    console.log(":::::: Send Notification :::::::", data);
+  }
 
 
   showUserList() {
-
+    this.userService.showUsersListAdmin().subscribe(resp => {
+      if (resp.statusCode === 200) {
+        console.log(resp.data);
+        this.post = resp.data;
+        this.dataSourceUser = new MatTableDataSource(this.post);
+        this.dataSource.paginator = this.paginator;
+      }
+    }, err => {
+      console.log(err);
+      this.toaster.error("ERROR");
+    })
   }
 
   updateVendor() {

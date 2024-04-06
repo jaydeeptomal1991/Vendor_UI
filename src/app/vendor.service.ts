@@ -21,5 +21,10 @@ export class VendorService {
 
   updateVendor(data: any) {
     console.log("Data is: ", data);
+    const token = sessionStorage.getItem('token');
+    const header = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.patch<vendorListData>('http://localhost:8082/api/updateVendor', data, {
+      headers: header
+    })
   }
 }

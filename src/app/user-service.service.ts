@@ -45,7 +45,15 @@ export class UserServiceService {
     return this.http.get<UserListData>('http://localhost:8082/showUserList', {
       headers: header
     })
+  }
 
+  updateUserAdmin(data: any) {
+    console.log("Data is: ", data);
+    const token = sessionStorage.getItem('token');
+    const header = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.patch<UserListData>('http://localhost:8082/updateUser', data, {
+      headers: header
+    })
   }
 
 }

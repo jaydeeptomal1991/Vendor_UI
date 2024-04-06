@@ -4,5 +4,6 @@ export interface UsersData {
     username: string;
     phoneNumber: string;
     createdDate: Date;
+    activeDays: number;
     pendingRequest: boolean;
 } 

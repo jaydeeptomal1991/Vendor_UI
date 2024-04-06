@@ -14,18 +14,30 @@ export class DialogComponent {
 
   value: string = '';
   vendorId!: number;
+  userId!: number;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogMessage, private adminService: AdminService, private sharedService: SharedService) {
     this.value = data.value;
     this.vendorId = data.vendorId;
+    this.userId = data.userId;
   }
 
   accept(vendorId: number, diag: string) {
-    this.adminService.setAcceptVendorId(vendorId, diag);
-    this.sharedService.setData(vendorId);
+    if (this.vendorId > 0) {
+      this.adminService.setAcceptVendorId(vendorId, diag);
+      this.sharedService.setData(vendorId);
+    }
+    else {
+      this.adminService.setAcceptUserId(this.userId, diag);
+    }
   }
 
   reject(vendorId: number, diag: string) {
-    this.adminService.updateVendorId(vendorId, diag);
+    if (this.vendorId > 0) {
+      this.adminService.updateVendorId(vendorId, diag);
+    } else {
+      this.adminService.updateUserId(this.userId, diag);
+    }
+
   }
 }

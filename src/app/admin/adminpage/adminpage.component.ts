@@ -22,6 +22,7 @@ import { UsersData } from 'src/app/model/userData';
 
 export interface Vendor {
   vendorId: number;
+  userId: number;
   vendorName: string;
   vendorLicenseOwner: string;
   registrationNumber: string;
@@ -57,7 +58,7 @@ export class AdminpageComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   setDialog!: string;
   vendorId!: number;
-  displayedColumnsUsers: string[] = ['name', 'username', 'phoneNumber', 'createdDate', 'pendingRequest'];
+  displayedColumnsUsers: string[] = ['name', 'username', 'phoneNumber', 'createdDate', 'activeDays', 'pendingRequest'];
   dataSourceUser = new MatTableDataSource<UsersData>;
 
 
@@ -117,9 +118,7 @@ export class AdminpageComponent {
                     const Vendor = resp.data[i];
                     Vendor.activeDays = x;
                     resp.data[i] = Vendor;
-                    if (resp.data[i].activeDays === 30) {
-                      this.sendNotification(resp.data[i]);
-                    }
+
                   }
                   this.post = resp.data;
                   this.dataSource = new MatTableDataSource(this.post);
@@ -131,6 +130,100 @@ export class AdminpageComponent {
             )
         }
         this.adminService.setAcceptVendorId(0, '');
+
+      })
+  }
+
+  // User Accept Dialog
+  acceptDialogUser(userId: number): void {
+    this.dialog.open(DialogComponent, {
+      width: '400px',
+      height: '170px',
+      data: {
+        value: "ACCEPT",
+        userId
+      }
+    })
+      .afterClosed()
+      .subscribe(() => {
+        let x = this.adminService.getAcceptedUserId();
+        let y = x.split(' ');
+        if (y[1] === 'Accept') {
+          this.userService.updateUserAdmin({ userId, pendingRequest: false })
+            .subscribe(
+              resp => {
+                if (resp.statusCode === 200) {
+                  // this.post = resp.data;
+                  // this.dataSourceUser = new MatTableDataSource(this.post);
+                  // this.dataSourceUser.paginator = this.paginator;
+
+                  let now = new Date();
+                  for (let i = 0; i < resp.data.length; i++) {
+                    let { createdDate } = resp.data[i];
+                    let now = new Date();
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    const diffInTime = now.getTime() - new Date(createdDate).getTime();
+                    const x = Math.round(diffInTime / oneDay);
+                    const UsersData = resp.data[i];
+                    UsersData.activeDays = x;
+                    resp.data[i] = UsersData;
+                    if (x == 1) {
+                      this.sendNotification(userId);
+                    }
+                  }
+                  this.showUserList();
+                }
+              }, err => {
+                this.toaster.error("ERROR");
+              }
+            )
+        }
+        this.adminService.setAcceptUserId(0, '');
+      })
+  }
+
+  rejectDialogUser(userId: number): void {
+    this.dialog.open(DialogComponent, {
+      width: '400px',
+      height: '170px',
+      data: {
+        value: "REJECT",
+        userId
+      }
+    })
+      .afterClosed()
+      .subscribe(() => {
+        let x = this.adminService.getAcceptedUserId();
+        let y = x.split(' ');
+        if (y[1] === 'Accept') {
+          this.userService.updateUserAdmin({ userId, pendingRequest: true })
+            .subscribe(
+              resp => {
+                if (resp.statusCode === 200) {
+                  // this.post = resp.data;
+                  // this.dataSourceUser = new MatTableDataSource(this.post);
+                  // this.dataSourceUser.paginator = this.paginator;
+                  for (let i = 0; i < resp.data.length; i++) {
+                    let { createdDate } = resp.data[i];
+                    let now = new Date();
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    const diffInTime = now.getTime() - new Date(createdDate).getTime();
+                    const x = Math.round(diffInTime / oneDay);
+                    const UsersData = resp.data[i];
+                    UsersData.activeDays = x;
+                    resp.data[i] = UsersData;
+                    if (x == 1) {
+                      this.sendNotification(userId);
+                    }
+                  }
+                  this.showUserList();
+                }
+              }, err => {
+                this.toaster.error("ERROR");
+              }
+            )
+        }
+        this.adminService.setAcceptUserId(0, '');
 
       })
   }
@@ -163,9 +256,7 @@ export class AdminpageComponent {
                     const Vendor = resp.data[i];
                     Vendor.activeDays = x;
                     resp.data[i] = Vendor;
-                    if (resp.data[i].activeDays === 30) {
-                      this.sendNotification(resp.data[i]);
-                    }
+
                   }
                   this.post = resp.data;
                   this.dataSource = new MatTableDataSource(this.post);
@@ -226,9 +317,7 @@ export class AdminpageComponent {
             const Vendor = resp.data[i];
             Vendor.activeDays = x;
             resp.data[i] = Vendor;
-            if (resp.data[i].activeDays === 30) {
-              this.sendNotification(resp.data[i]);
-            }
+
           }
           this.post = resp.data;
           this.dataSource = new MatTableDataSource(this.post);
@@ -240,15 +329,24 @@ export class AdminpageComponent {
     )
   }
 
-  sendNotification(data: Vendor) {
-    console.log(":::::: Send Notification :::::::", data);
-  }
-
 
   showUserList() {
     this.userService.showUsersListAdmin().subscribe(resp => {
       if (resp.statusCode === 200) {
-        console.log(resp.data);
+        let now = new Date();
+        for (let i = 0; i < resp.data.length; i++) {
+          let { createdDate } = resp.data[i];
+          let now = new Date();
+          const oneDay = 24 * 60 * 60 * 1000;
+          const diffInTime = now.getTime() - new Date(createdDate).getTime();
+          const x = Math.round(diffInTime / oneDay);
+          const UsersData = resp.data[i];
+          UsersData.activeDays = x;
+          resp.data[i] = UsersData;
+          if (x == 1 && resp.data[i].pendingRequest === false) {
+            this.sendNotification(resp.data[i].userId);
+          }
+        }
         this.post = resp.data;
         this.dataSourceUser = new MatTableDataSource(this.post);
         this.dataSource.paginator = this.paginator;
@@ -262,5 +360,11 @@ export class AdminpageComponent {
   updateVendor() {
 
   }
+
+
+  sendNotification(data: any) {
+    console.log(":::::: Send Notification :::::::", data);
+  }
+
 
 }
